@@ -99,6 +99,10 @@ $conn->close();
             border-radius: 5px;
         }
 
+        .btn-update {
+            background-color: #24b5e1ff;
+        }
+
         .btn-edit,
         .btn-update {
             color: white;
