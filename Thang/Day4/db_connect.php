@@ -2,7 +2,7 @@
 $servername = "sql307.infinityfree.com"; // MySQL Hostname
 $username = "if0_39690589"; // MySQL Username
 $password = "Thang100705"; // MySQL Password
-$dbname = "if0_39690589_XXX"; // Tên Database của bạn (thay XXX bằng tên CSDL bạn đã tạo)
+$dbname = "if0_39690589_my_guest"; // TÃªn Database cá»§a báº¡n (thay XXX báº±ng tÃªn CSDL báº¡n ÄÃ£ táº¡o)
 
 // Tạo kết nối
 $conn = new mysqli($servername, $username, $password, $dbname);
