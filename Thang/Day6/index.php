@@ -1,5 +1,5 @@
 <?php
-require './employee/employee.php'; // file chứa các hàm DB
+require './employee/employee.php';
 
 // --- Xử lý POST ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -31,10 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Lấy dữ liệu mới
-$employees = get_all_employees();
+// --- Xử lý tìm kiếm ---
+$search_first_name = $_GET['search_first_name'] ?? '';
+$search_last_name = $_GET['search_last_name'] ?? '';
+$search_department_id = $_GET['search_department_id'] ?? '';
+$search_role_id = $_GET['search_role_id'] ?? '';
+
+// Lấy dữ liệu
+$employees = search_employees($search_first_name, $search_last_name, $search_department_id, $search_role_id);
 $roles = get_all_role();
 $departments = get_all_department();
+
 disconnect_db();
 ?>
 
@@ -55,7 +62,6 @@ disconnect_db();
         body {
             display: flex;
             align-items: stretch;
-            /* nav và content kéo dài bằng nhau */
         }
 
         nav {
@@ -63,9 +69,7 @@ disconnect_db();
             background-color: #2c3e50;
             color: #fff;
             padding: 20px;
-            /* Xóa height cố định */
             min-height: 100vh;
-            /* ít nhất full viewport */
             box-sizing: border-box;
         }
 
@@ -122,7 +126,6 @@ disconnect_db();
             padding: 5px 10px;
         }
     </style>
-
 </head>
 
 <body>
@@ -138,6 +141,31 @@ disconnect_db();
 
         <!-- NHÂN VIÊN -->
         <h2 id="employees">Danh sách nhân viên</h2>
+
+        <!-- Form tìm kiếm -->
+        <div class="form-container">
+            <h3>Tìm kiếm nhân viên</h3>
+            <form method="get">
+                First Name: <input type="text" name="search_first_name" value="<?= htmlspecialchars($search_first_name) ?>">
+                Last Name: <input type="text" name="search_last_name" value="<?= htmlspecialchars($search_last_name) ?>">
+                Department:
+                <select name="search_department_id">
+                    <option value="">--Tất cả--</option>
+                    <?php foreach ($departments as $dep): ?>
+                        <option value="<?= $dep['department_id'] ?>" <?= $search_department_id == $dep['department_id'] ? 'selected' : '' ?>><?= $dep['department_name'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+                Role:
+                <select name="search_role_id">
+                    <option value="">--Tất cả--</option>
+                    <?php foreach ($roles as $role): ?>
+                        <option value="<?= $role['role_id'] ?>" <?= $search_role_id == $role['role_id'] ? 'selected' : '' ?>><?= $role['role_name'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <input type="submit" value="Tìm kiếm">
+            </form>
+        </div>
+
         <table>
             <tr>
                 <th>First name</th>
@@ -175,6 +203,7 @@ disconnect_db();
             <?php endforeach; ?>
         </table>
 
+        <!-- Form thêm nhân viên -->
         <div class="form-container">
             <h3>Thêm nhân viên</h3>
             <form method="post">
